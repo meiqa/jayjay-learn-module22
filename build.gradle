@@ -1,0 +1,43 @@
+//JUnit 4
+
+plugins {
+    id 'java'
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.seleniumhq.selenium:selenium-java:4.46.0' // Source: https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    implementation 'io.cucumber:cucumber-java:7.34.6' // Source: https://mvnrepository.com/artifact/io.cucumber/cucumber-java
+    testImplementation 'io.cucumber:cucumber-junit:7.34.6' // Source: https://mvnrepository.com/artifact/io.cucumber/cucumber-junit
+    testImplementation 'junit:junit:4.13.2'
+}
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testImplementation
+    }
+}
+
+//helper
+def tags = (findProperty('tags') == null) ? 'not @exclude' : findProperty('tags') + ' and not @exclude'
+
+//custom task gradle + cucumber
+tasks.register("cucumber", JavaExec) {
+    description = "Running Cucumber Test"
+    dependsOn assemble, compileTestJava
+    classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+    mainClass = "io.cucumber.core.cli.Main"
+    args = [
+            '--plugin', 'html:reports/test-report.html',
+            '--plugin', 'pretty',
+            '--glue', 'cucumberDemo',
+            '--tags', "${tags}",
+            'src/test/resources'
+    ]
+}
