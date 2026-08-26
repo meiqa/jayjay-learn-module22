@@ -70,7 +70,7 @@ jobs:
       uses: actions/upload-artifact@v7.0.1
       if: always()
       with:
-          name: Cucumber Report# optional, default is artifact
+          name: Cucumber Report
           path: reports
 
     # deploy to GitHub Pages
