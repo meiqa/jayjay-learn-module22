@@ -61,18 +61,4 @@ jobs:
     - name: Execute Cucumber Test
       run: ./gradlew cucumber
 
-    # archive test results
-    - name: Archive Test Result
-      uses: actions/upload-artifact@v7.0.1
-      if: always()
-      with:
-          name: Cucumber Report# optional, default is artifact
-          path: reports
 
-    # deploy to GitHub Pages
-    - name: Deploy Report to GitHub Pages
-      if: always()
-      uses: peaceiris/actions-gh-pages@v4.1.0
-      with:
-          personal_token: ${{secrets.GITHUB_TOKEN}}
-          publish_dir: reports
